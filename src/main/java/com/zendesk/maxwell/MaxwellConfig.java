@@ -148,6 +148,7 @@ public class MaxwellConfig extends AbstractConfig {
 	public Scripting scripting;
 
 	//create by lixinlin
+	//add binlog param
 	public String offsetStart;
 	public String offsetEnd;
 	public String binlog_files;
@@ -413,6 +414,7 @@ public class MaxwellConfig extends AbstractConfig {
 
 	private void setup(OptionSet options, Properties properties) {
 		//create by lixinlin
+		//add binlog param
 		this.offsetStart = fetchOption("offset_start", options, properties, null);
 		this.offsetEnd = fetchOption("offset_end", options, properties, null);
 		this.binlog_files = fetchOption("binlog_files", options, properties, null);
