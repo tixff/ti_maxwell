@@ -31,6 +31,7 @@ import com.zendesk.maxwell.util.RunLoopProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -385,7 +386,9 @@ public class BinlogConnectorReplicator extends RunLoopProcess implements Replica
 
 	protected void processRow(RowMap row) throws Exception {
 		if (row instanceof HeartbeatRowMap) {
+			//filter binlog
 			if (offsetFilter(row)) return;
+			LOGGER.warn("--------->put row:" + row.getDatabase() + " " + row.getTable());
 			producer.push(row);
 			if (stopAtHeartbeat != null) {
 				long thisHeartbeat = row.getPosition().getLastHeartbeatRead();
@@ -396,7 +399,9 @@ public class BinlogConnectorReplicator extends RunLoopProcess implements Replica
 				}
 			}
 		} else if (!shouldSkipRow(row)) {
+			//filter binlog
 			if (offsetFilter(row)) return;
+			LOGGER.warn("--------->put row:" + row.getDatabase() + " " + row.getTable());
 			producer.push(row);
 		}
 	}
@@ -767,9 +772,10 @@ public class BinlogConnectorReplicator extends RunLoopProcess implements Replica
 	private boolean offsetFilter(RowMap row) {
 		long offset = row.getPosition().getBinlogPosition().getOffset();
 		String file = row.getPosition().getBinlogPosition().getFile();
-		LOGGER.warn("OOOOOOOOOOOOOOO->startFileAndOffset:" + this.config.getFirstBinlogFile() + " " + this.config.offsetStart);
-		LOGGER.warn("OOOOOOOOOOOOOOO->EndFileAndOffset:" + this.config.getLastBinlogFile() + " " + this.config.offsetEnd);
-		LOGGER.warn("PPPPPPPPPPPPPPP->processRow:" + offset);
+		LOGGER.warn("------------------>current file:"+file);
+		LOGGER.warn("------------------>startFileAndOffset:" + this.config.getFirstBinlogFile() + " " + this.config.offsetStart);
+		LOGGER.warn("------------------>EndFileAndOffset:" + this.config.getLastBinlogFile() + " " + this.config.offsetEnd);
+		LOGGER.warn("------------------>currentOffset:" + offset);
 		String binlog_files = this.config.binlog_files;
 		if (binlog_files != null) {
 			if (!binlog_files.contains(file)) {

@@ -204,6 +204,7 @@ public class Maxwell implements Runnable {
 
 		MaxwellConfig config = this.context.getConfig();
 		// modification by lixinlin
+		//add config constructor for BinlogConnectorReplicator
 		this.replicator = new BinlogConnectorReplicator(
 				mysqlSchemaStore,
 				producer,
@@ -263,4 +264,5 @@ public class Maxwell implements Runnable {
 			System.exit(1);
 		}
 	}
+
 }
